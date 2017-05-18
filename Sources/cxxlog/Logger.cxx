@@ -23,21 +23,17 @@ namespace cxxlog {
 
     // Internal delegate
     std::shared_ptr<LoggerDelegate> Logger::delegate_ = std::make_shared<DefaultLoggerDelegate>();
-
-    // Default log level
-    Level Logger::defaultLevel_ = Level::INFO;
-
-    // Specific log levels
-    std::map<std::string, Level> Logger::loggerLevels_{};
-
-    // Get default log level
-    Level Logger::defaultLevel() { return defaultLevel_; }
-
-    // Set default log level
-    void Logger::defaultLevel(Level level) { Logger::defaultLevel_ = level; }
     
-    // Register level for a specified class
-    void Logger::registerLevel(const std::string & name, Level level) {
-        loggerLevels_[name] = level;
+    
+    // Retrieve delegate
+    std::shared_ptr<LoggerDelegate> Logger::delegate() {
+        return delegate_;
+    }
+    
+    // Set delegate to define backend
+    void Logger::setDelegate(std::shared_ptr<LoggerDelegate> delegate) {
+        if (delegate) {
+            Logger::delegate_ = delegate;
+        }
     }
 }

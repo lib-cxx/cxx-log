@@ -18,10 +18,11 @@
 #include <catch/catch.hxx>
 
 #include "cxxlog/Logger.hxx"
+#include "cxxlog/DefaultLoggerDelegate.hxx"
 
 using namespace cxxlog;
 
-struct LambdaDelegate : public LoggerDelegate {
+struct LambdaDelegate : public DefaultLoggerDelegate {
 
     static bool hasLog_;
 
@@ -40,13 +41,13 @@ TEST_CASE("Logger", "[stream]") {
     // Test default logger
     LOGGER(default).log(Level::INFO, "msg level1");
     
-    REQUIRE(Level::INFO == Logger::defaultLevel());
+    REQUIRE(Level::INFO == Logger::delegate()->defaultLevel());
     
-    // Set default log level
-    Logger::defaultLevel(Level::WARNING);
-
     // Set custom delegate to test results
     auto delegate = std::make_shared<LambdaDelegate>();
+    
+    // Set default log level
+    delegate->defaultLevel(Level::WARNING);
 
     Logger::setDelegate(delegate);
 
@@ -62,15 +63,7 @@ TEST_CASE("Logger", "[stream]") {
     REQUIRE(LambdaDelegate::hasLog_);
     delegate->reset();
     
-    // Set current loger level
-    logger1.level(Level::INFO);
-    REQUIRE(Level::INFO == logger1.level());
-    
-    logger1.log(Level::INFO, "msg level1");
-    REQUIRE(LambdaDelegate::hasLog_);
-    delegate->reset();
-    
     // Test specif level
-    Logger::registerLevel("severLogger", Level::SEVERE);
+    delegate->registerLevel("severLogger", Level::SEVERE);
     REQUIRE(Level::SEVERE == LOGGER(severLogger).level());
 }

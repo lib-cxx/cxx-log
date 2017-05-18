@@ -24,7 +24,16 @@ namespace cxxlog {
     /// \brief Define delegate to implement logger backend
     /// May be overrided
     struct LoggerDelegate {
-
+        
+        /// \brief Retrieve default level
+        /// \return Level use as default value
+        virtual Level defaultLevel() const = 0;
+        
+        /// \brief Retrieve level for a logger
+        /// \param name Logger name
+        /// \return Specific level if exixst or default level
+        virtual Level level(const std::string & name) const = 0;
+        
         /// \brief Methode used to log message on backend
         /// \param level Log level
         /// \param name Logger name
