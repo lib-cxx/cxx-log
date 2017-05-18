@@ -20,15 +20,47 @@
 #include <iostream>
 
 namespace cxxlog {
-
-    /// \brief Raw output stream
-    /// \return Internal output stream used to log messages
+    
+    // Default log level
+    Level DefaultLoggerDelegate::defaultLevel_ = Level::INFO;
+    
+    // Specific log levels
+    std::map<std::string, Level> DefaultLoggerDelegate::loggerLevels_{};
+    
+    DefaultLoggerDelegate::DefaultLoggerDelegate() {
+       
+    }
+    
+    // Get default log level
+    Level DefaultLoggerDelegate::defaultLevel() const {
+        return DefaultLoggerDelegate::defaultLevel_;
+    }
+    
+    // Set default log level
+    void DefaultLoggerDelegate::defaultLevel(Level level) { DefaultLoggerDelegate::defaultLevel_ = level; }
+    
+    // Register level for a specified class
+    void DefaultLoggerDelegate::registerLevel(const std::string & name, Level level) {
+        loggerLevels_[name] = level;
+    }
+    
+    // Retrieve level for a logger
+    Level DefaultLoggerDelegate::level(const std::string & name) const {
+        
+        // Find specific configuration
+        auto level = DefaultLoggerDelegate::loggerLevels_.find(name);
+        if (level != loggerLevels_.end()) {
+            return level->second;
+        } else {
+            // Use default configuration
+            return DefaultLoggerDelegate::defaultLevel_;
+        }
+    }
+    
+    // Raw output stream
     std::ostream &DefaultLoggerDelegate::out() const { return std::cout; }
 
-    /// \brief Method used to format entry
-    /// \param out Raw ouput stream
-    /// \param level Log level
-    /// \param msg Message to log
+    // Method used to format entry
     void DefaultLoggerDelegate::format(std::ostream &out, Level level, const std::string &name,
                                        const std::string &msg) const {
         out << level << '|' << name << '|' << msg << std::endl;

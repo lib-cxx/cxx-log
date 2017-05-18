@@ -18,7 +18,6 @@
 #ifndef LOGGER_HXX
 #define LOGGER_HXX
 
-#include <map>
 #include <memory>
 
 #include "Formatter.hxx"
@@ -33,61 +32,32 @@ namespace cxxlog {
         /// \brief Internal delegate
         static std::shared_ptr<LoggerDelegate> delegate_;
 
-        /// \brief Default log level
-        static Level defaultLevel_;
-
-        /// \brief Specific log levels
-        static std::map<std::string, Level> loggerLevels_;
-
-        /// \brief Current log level
-        Level level_;
-
-      public:
+    public:
+        
+        /// \brief Retrieve delegate
+        static std::shared_ptr<LoggerDelegate> delegate();
+        
         /// \brief Set delegate to define backend
         /// \param delegate New delegate
-        static void setDelegate(std::shared_ptr<LoggerDelegate> delegate) {
-            if (delegate) {
-                Logger::delegate_ = delegate;
-            }
-        }
-
-        /// \brief Get default log level
-        /// \return Default log level
-        static Level defaultLevel();
-        
-        /// \brief Set default log level
-        /// \param level New default log level
-        static void defaultLevel(Level level);
-        
-        /// \brief register level for a specified class
-        /// \param name Logger name
-        /// \param level Logger level
-        static void registerLevel(const std::string & name, Level level);
+        static void setDelegate(std::shared_ptr<LoggerDelegate> delegate);
 
       private:
         /// \brief Logger name
         std::string name_;
-
+        
+        /// \brief Current log level
+        Level level_;
+        
         /// \brief Constructor with logger name
-        Logger(const std::string &name) : name_(name) {
-            // Find specific configuration
-            auto logger = Logger::loggerLevels_.find(name);
-            if (logger != loggerLevels_.end()) {
-                level_ = logger->second;
-            } else {
-                // Use default configuration
-                level_ = Logger::defaultLevel_;
-            }
+        Logger(const std::string &name) : name_(name), level_(Logger::delegate_->level(name_)) {
+
         }
 
       public:
+          
         /// \brief Get current log level
         /// \return current log level
         Level level() const { return level_; }
-
-        /// \brief Set new log level
-        /// \param level New log level
-        void level(Level level) { this->level_ = level; }
 
         /// \brief Log a parametrized message
         /// \tparam Objects Variadic template

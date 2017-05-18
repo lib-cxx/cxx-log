@@ -20,13 +20,28 @@
 
 #include "LoggerDelegate.hxx"
 #include <ostream>
+#include <map>
 
 namespace cxxlog {
 
     /// \brief Default backend implementation.
     /// May be overrided
-    struct DefaultLoggerDelegate : public LoggerDelegate {
+    class DefaultLoggerDelegate : public LoggerDelegate {
 
+    private:
+        
+        
+        /// \brief Default log level
+        static Level defaultLevel_;
+        
+        /// \brief Specific log levels
+        static std::map<std::string, Level> loggerLevels_;
+        
+    public:
+        
+        /// \brief Default constructor
+        DefaultLoggerDelegate();
+        
         /// \brief Raw output stream
         /// \return Internal output stream used to log messages
         virtual std::ostream &out() const;
@@ -37,7 +52,27 @@ namespace cxxlog {
         /// \param msg Message to log
         virtual void format(std::ostream &out, Level level, const std::string &name,
                             const std::string &msg) const;
-
+        
+        /// \brief Set default log level
+        /// \param level New default log level
+        static void defaultLevel(Level level);
+        
+        /// \brief register level for a specified class
+        /// \param name Logger name
+        /// \param level Logger level
+        static void registerLevel(const std::string & name, Level level);
+        
+    public:
+        
+        /// \brief Retrieve default level
+        /// \return Level use as default value
+        virtual Level defaultLevel() const override;
+        
+        /// \brief Retrieve level for a logger
+        /// \param name Logger name
+        /// \return Specific level if exixst or default level
+        virtual Level level(const std::string & name) const override;
+        
         // Override method to format message in raw output stream
         virtual void log(Level level, const std::string &name, const std::string &msg) const override;
     };
