@@ -21,19 +21,16 @@
 
 namespace cxxlog {
 
-    // Internal delegate
-    std::shared_ptr<LoggerDelegate> Logger::delegate_ = std::make_shared<DefaultLoggerDelegate>();
-    
-    
+    // Instanciate delegate
+    std::shared_ptr<LoggerDelegate> Logger::delegate_;
+
     // Retrieve delegate
-    std::shared_ptr<LoggerDelegate> Logger::delegate() {
-        return delegate_;
-    }
-    
+    std::shared_ptr<LoggerDelegate> Logger::delegate() { return delegate_; }
+
     // Set delegate to define backend
     void Logger::setDelegate(std::shared_ptr<LoggerDelegate> delegate) {
         if (delegate) {
-            Logger::delegate_ = delegate;
+            delegate_ = delegate;
         }
     }
 }

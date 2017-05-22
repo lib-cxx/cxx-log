@@ -29,14 +29,13 @@ namespace cxxlog {
     class Logger {
 
       private:
-        /// \brief Internal delegate
+        /// \brief define delegate
         static std::shared_ptr<LoggerDelegate> delegate_;
 
-    public:
-        
+      public:
         /// \brief Retrieve delegate
         static std::shared_ptr<LoggerDelegate> delegate();
-        
+
         /// \brief Set delegate to define backend
         /// \param delegate New delegate
         static void setDelegate(std::shared_ptr<LoggerDelegate> delegate);
@@ -44,29 +43,40 @@ namespace cxxlog {
       private:
         /// \brief Logger name
         std::string name_;
-        
-        /// \brief Current log level
-        Level level_;
-        
-        /// \brief Constructor with logger name
-        Logger(const std::string &name) : name_(name), level_(Logger::delegate_->level(name_)) {
 
-        }
+        /// \brief Current log level
+        mutable Level level_;
+
+        /// \brief Constructor with logger name
+        Logger(const std::string &name) : name_(name), level_(static_cast<Level>(-1)) {}
 
       public:
-          
         /// \brief Get current log level
         /// \return current log level
-        Level level() const { return level_; }
+        Level level() const {
+            if (level_ < 0) {
+                auto currentDelegate = delegate();
+                if (currentDelegate) {
+                    level_ = currentDelegate->defaultLevel();
+                } else {
+                    return Level::INFO;
+                }
+            }
+
+            return level_;
+        }
 
         /// \brief Log a parametrized message
         /// \tparam Objects Variadic template
-        /// \param level Log level
+        /// \param logLevel Log level
         /// \param msg Message
         /// \param objects parameters
-        template <typename... Objects> void log(Level level, const std::string &msg, Objects... objects) const {
-            if (level <= level_) {
-                delegate_->log(level, name_, format(msg, objects...));
+        template <typename... Objects> void log(Level logLevel, const std::string &msg, Objects... objects) const {
+            if (logLevel <= level()) {
+                auto loggerDelegate = delegate();
+                if (loggerDelegate) {
+                    loggerDelegate->log(logLevel, name_, format(msg, objects...));
+                }
             }
         }
 
