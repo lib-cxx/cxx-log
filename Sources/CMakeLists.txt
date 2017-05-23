@@ -1,7 +1,6 @@
 
 # Add sources files
 set (${PROJECT_NAME}_SOURCES
-    main.cxx
     cxxlog/Level.cxx cxxlog/Formatter.hxx
     cxxlog/Level.cxx cxxlog/Level.hxx
     cxxlog/LoggerDelegate.hxx
