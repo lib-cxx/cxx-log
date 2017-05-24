@@ -57,7 +57,7 @@ namespace cxxlog {
             if (level_ < 0) {
                 auto currentDelegate = delegate();
                 if (currentDelegate) {
-                    level_ = currentDelegate->defaultLevel();
+                    level_ = currentDelegate->level(name_);
                 } else {
                     return Level::INFO;
                 }

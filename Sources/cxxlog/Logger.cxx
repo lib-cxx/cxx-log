@@ -22,7 +22,7 @@
 namespace cxxlog {
 
     // Instanciate delegate
-    std::shared_ptr<LoggerDelegate> Logger::delegate_;
+    std::shared_ptr<LoggerDelegate> Logger::delegate_ = std::make_shared<DefaultLoggerDelegate>();
 
     // Retrieve delegate
     std::shared_ptr<LoggerDelegate> Logger::delegate() { return delegate_; }
