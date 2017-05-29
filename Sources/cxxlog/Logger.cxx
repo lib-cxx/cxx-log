@@ -18,6 +18,7 @@
 #include "Logger.hxx"
 
 #include "DefaultLoggerDelegate.hxx"
+#include <sstream>
 
 namespace cxxlog {
 
@@ -31,6 +32,18 @@ namespace cxxlog {
     void Logger::setDelegate(std::shared_ptr<LoggerDelegate> delegate) {
         if (delegate) {
             delegate_ = delegate;
+        }
+    }
+    
+    // Log with lambda
+    void Logger::log(Level logLevel, std::function<void(std::ostream &)> fct) {
+        if (logLevel <= level()) {
+            auto loggerDelegate = delegate();
+            if (loggerDelegate) {
+                std::stringstream os;
+                fct(os);
+                loggerDelegate->log(logLevel, name_, os.str());
+            }
         }
     }
 }
