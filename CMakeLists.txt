@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.0)
 
 # Define project name
-project(cxxlog)
+project(cxx-log)
 
 # Enable testing capability
 enable_testing()
