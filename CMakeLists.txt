@@ -1,32 +1,22 @@
-cmake_minimum_required(VERSION 3.0.0)
+####
+# Set minimum version of CMake. Since command 'project' use
+# VERSION sub-option we need 3.0.
+cmake_minimum_required(VERSION 3.0)
 
-# Define project name
-project(cxx-log)
+####
+# Set variables:
+#   * PROJECT_NAME
+#   * PROJECT_VERSION
+project(cxx-log VERSION 0.1.0)
 
-# Enable testing capability
-enable_testing()
+# Include config
+include(Config/config.cmake)
 
-# Set C++ compatibility
-set(CMAKE_CXX_STANDARD 17)
-
-# Define CXX flags
-set(CXX_FLAGS -Wall -pedantic)
-
-# Create test coverage target (gcov)
-if (CMAKE_BUILD_TYPE STREQUAL "Coverage")
-	set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE ON)
-    set(CXX_FLAGS ${CXX_FLAGS} --coverage  -fprofile-arcs -ftest-coverage)
-	set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS} " --coverage  -fprofile-arcs -ftest-coverage")
-endif()
-
-# Set compilation flags
-add_definitions(${CXX_FLAGS})
-
-# Include dependencies
-add_subdirectory(Dependencies)
+# Include build
+include(Config/build.cmake)
 
 # Include sources
-add_subdirectory(Sources)
+#add_subdirectory(Sources)
 
 # Include test
 add_subdirectory(Tests)

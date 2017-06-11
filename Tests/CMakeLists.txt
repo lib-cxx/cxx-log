@@ -16,16 +16,13 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/Dependencies/volatile/${CATCH_VERSION} # catch directory
 )
 
-# Add sources files
-set (${PROJECT_NAME}_TEST_SOURCES
+# Create create executable
+add_executable(${PROJECT_NAME}Tests 
     main.cxx
     cxxlog/LevelTest.cxx
     cxxlog/FormatterTest.cxx
     cxxlog/LoggerTest.cxx
 )
-
-# Create create executable
-add_executable(${PROJECT_NAME}Tests ${${PROJECT_NAME}_TEST_SOURCES})
 
 # Link libraries
 target_link_libraries(${PROJECT_NAME}Tests ${PROJECT_NAME})
