@@ -1,3 +1,6 @@
+# Enable testing capability
+enable_testing()
+
 # Set C++ compatibility
 set(CMAKE_CXX_STANDARD 17)
 
