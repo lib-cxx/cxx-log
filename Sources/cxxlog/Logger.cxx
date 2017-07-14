@@ -36,7 +36,7 @@ namespace cxxlog {
     }
     
     // Log with lambda
-    void Logger::log(Level logLevel, std::function<void(std::ostream &)> fct) {
+    void Logger::log(Level logLevel, std::function<void(std::ostream &)> fct) const {
         if (logLevel <= level()) {
             auto loggerDelegate = delegate();
             if (loggerDelegate) {

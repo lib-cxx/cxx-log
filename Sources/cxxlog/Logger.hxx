@@ -83,7 +83,7 @@ namespace cxxlog {
         /// \brief Log entry using lambda
         /// \param logLevel Minimum level
         /// \param fct Lambda used to log complexe message
-        void log(Level logLevel, std::function<void(std::ostream &)> fct);
+        void log(Level logLevel, std::function<void(std::ostream &)> fct) const;
 
         /// \brief Get or create constructor by name
         static const Logger get(std::string name) { return Logger{name}; }
