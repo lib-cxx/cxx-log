@@ -48,7 +48,8 @@ namespace cxxlog {
         mutable Level level_;
 
         /// \brief Constructor with logger name
-        Logger(const std::string &name) : name_(name), level_(static_cast<Level>(-1)) {}
+        /// \param name Logger name
+        explicit Logger(const std::string &name) : name_(name), level_(static_cast<Level>(-1)) {}
 
       public:
         /// \brief Get current log level

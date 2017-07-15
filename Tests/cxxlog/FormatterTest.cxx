@@ -17,7 +17,7 @@
 
 #include <catch/catch.hxx>
 
-#include "cxxlog/Logger.hxx"
+#include "cxx-log/Logger.hxx"
 
 using namespace cxxlog;
 

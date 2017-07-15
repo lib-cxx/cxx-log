@@ -1,26 +1,16 @@
-####
-# Create targets
-add_library(cxx-log 
-    Sources/cxxlog/Level.cxx Sources/cxxlog/Formatter.hxx
-    Sources/cxxlog/Level.cxx Sources/cxxlog/Level.hxx
-    Sources/cxxlog/LoggerDelegate.hxx
-    Sources/cxxlog/DefaultLoggerDelegate.cxx Sources/cxxlog/DefaultLoggerDelegate.hxx
-    Sources/cxxlog/Logger.cxx Sources/cxxlog/Logger.hxx
-)
-
-####
-# Properties of targets
-
-# Add definitions for targets
-# Values:
-#   * Debug: -DCXX_LOG_DEBUG=1
-#   * Release: -DCXX_LOG_DEBUG=0
-#   * other: -DCXX_LOG_DEBUG=0
-target_compile_definitions(cxx-log  PUBLIC "CXX_LOG_DEBUG=$<CONFIG:Debug>")
-
 # Generate headers:
 include(GenerateExportHeader)
-generate_export_header(cxx-log)
+generate_export_header(${PROJECT_NAME})
+
+# Create test coverage target (gcov)
+if (CMAKE_BUILD_TYPE STREQUAL "Coverage")
+    message("-- Activate Coverage for ${PROJECT_NAME}")
+	set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE ON)
+	set(CMAKE_CXX_FLAGS "-g -O0 -Wall -fprofile-arcs -ftest-coverage")
+    set(CMAKE_C_FLAGS "-g -O0 -Wall -W -fprofile-arcs -ftest-coverage")
+    set(CMAKE_EXE_LINKER_FLAGS "-fprofile-arcs -ftest-coverage")
+
+endif()
 
 # Global includes. Used by all targets
 # Note:
@@ -29,7 +19,7 @@ generate_export_header(cxx-log)
 #   * header location in project: ${CMAKE_CURRENT_BINARY_DIR}/bar_export.hpp
 #   * header can be included by: `#include <bar_export.hpp>`
 target_include_directories(
-    cxx-log PUBLIC
+    ${PROJECT_NAME} PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/Sources>"
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
 )
@@ -72,11 +62,9 @@ configure_package_config_file(
 )
 
 # Targets:
-#   * <prefix>/lib/cxx-log.a
-#   * header location after install: <prefix>/include/foo/Bar.hpp
-#   * headers can be included by C++ code `#include <foo/Bar.hpp>`
+#   * <prefix>/lib/${PROJECT_NAME}.a
 install(
-    TARGETS cxx-log
+    TARGETS ${PROJECT_NAME}
     EXPORT "${targets_export_name}"
     LIBRARY DESTINATION "lib"
     ARCHIVE DESTINATION "lib"
@@ -85,33 +73,26 @@ install(
 )
 
 # Headers:
-#   * Source/foo/Bar.hpp -> <prefix>/include/foo/Bar.hpp
-#   * Source/foo/Baz.hpp -> <prefix>/include/foo/Baz.hpp
 install(
-    DIRECTORY "Sources/cxxlog"
+    DIRECTORY "Sources/${PROJECT_NAME}"
     DESTINATION "${include_install_dir}"
     FILES_MATCHING PATTERN "*.hxx"
 )
 
 # Export headers:
-#   * ${CMAKE_CURRENT_BINARY_DIR}/bar_export.h -> <prefix>/include/bar_export.h
-#   * ${CMAKE_CURRENT_BINARY_DIR}/baz_export.h -> <prefix>/include/baz_export.h
 install(
     FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/cxx-log_export.h"
+        "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_export.h"
     DESTINATION "${include_install_dir}"
 )
 
 # Config
-#   * <prefix>/lib/cmake/Foo/FooConfig.cmake
-#   * <prefix>/lib/cmake/Foo/FooConfigVersion.cmake
 install(
     FILES "${project_config}" "${version_config}"
     DESTINATION "${config_install_dir}"
 )
 
 # Config
-#   * <prefix>/lib/cmake/Foo/FooTargets.cmake
 install(
     EXPORT "${targets_export_name}"
     NAMESPACE "${namespace}"

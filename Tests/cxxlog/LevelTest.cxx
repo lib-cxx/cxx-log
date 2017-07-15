@@ -17,7 +17,7 @@
 
 #include <catch/catch.hxx>
 
-#include "cxxlog/Level.hxx"
+#include "cxx-log/Level.hxx"
 
 using namespace cxxlog;
 

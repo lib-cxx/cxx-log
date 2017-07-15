@@ -17,8 +17,8 @@
 
 #include <catch/catch.hxx>
 
-#include "cxxlog/Logger.hxx"
-#include "cxxlog/DefaultLoggerDelegate.hxx"
+#include "cxx-log/Logger.hxx"
+#include "cxx-log/DefaultLoggerDelegate.hxx"
 
 using namespace cxxlog;
 
